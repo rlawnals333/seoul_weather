@@ -1,39 +1,40 @@
-name: Fetch Weather Seoul Data # 서울 날씨 정보 수집 
-on: #작업을 수행하는 조건 
-  schedule: #스케줄링
-    - cron: "*/1 * * * *" #리눅스 스케줄링 명령어 (1분마다)
-  workflow_dispatch:  # 수동으로 동작가능!!
-  push: #repository에 push가 일어나면 뭐 해라
-    branches: 
-      - main #main에 push가 일어나면
-jobs: #실행할 작업을 정의 
-  fetch_weather: #작업 이름
-    runs-on: ubuntu-lastes # 우분투 최신버전!! ex. windows-lastes, mac-lastes
+name: Fetch Seoul Weather Data
 
-    steps: #실행 동작 단계
-      - name: 저장소 체크아웃 #첫번쨰 스텝
-        uses: actions/checkout@v3 #현재 github 저장소를 clone 
-        with:  #옵션
-          token: ${{secrets.GITHUB_TOKEN}} #실행할 때 push, commint 할때 내 github 권한으로 사용 
+on:
+  schedule:
+    - cron: "*/1 * * * *"  # 1분마다 실행
+  workflow_dispatch:  # 수동 실행 가능
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch_weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # 푸시 권한 추가
+
       - name: Python 설정
-        uses: action/setup-python@v4 #python 설치 플러그인 동작 
-        with: 
+        uses: actions/setup-python@v4
+        with:
           python-version: "3.9"
 
       - name: 필요한 패키지 설치
-         run: pip install requests #API 요청 위한 라이브러리 설치 
+        run: pip install requests
 
       - name: 날씨 데이터 가져오기
-         env: #GITHUB secrets 에서 환경 변수 가져오기 (보안을 위해)
-           OPENWEATHER_API_KEY: ${{secrets.OPENWEATHER_API_KEY}}
-         run: python weather_script.py #파이썬 스크립트를 실행해라 
+        env:
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+        run: python weather_script.py
 
-      - name: 변경 사항 커밋 및 푸시 
-         run: | #파이프라인 여러개 run
-           git config --global user.name "github-actions[bot]" #봇이라는 이름 남기기
-           git config --global user.email "github-actions@github.com" #이메일 주소 남기기 내꺼 쓰지말기
-           git add seoul_weather.csv #날씨 데이터 저장 csv를 github에 추가 
-           git commit -m "Update weather data (auto)" #변경 사항이 있을 경우 커밋-> update 됨 
-           git push #만약 동료가 업데이트 하려면 변경 사항을 git에 push pull 먼저하고 push 해야함 = merge
-
-         
+      - name: 변경 사항 커밋 및 푸시
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git add seoul_weather.csv
+          git commit -m "Update weather data (auto)"
+          git push
