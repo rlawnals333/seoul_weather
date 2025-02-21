@@ -21,9 +21,9 @@ import time
 url = "http://127.0.0.1:5000/vote"
 
 #특정시간 vote 페이지 열기기
-# def open_web():
-#     driver = wb.Chrome()
-#     driver.get(url)     
+
+driver = wb.Chrome()
+driver.get(url)     
 
 #     time.sleep(3600)
 #     driver.close()
