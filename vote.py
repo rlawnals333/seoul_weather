@@ -21,13 +21,13 @@ import time
 url = "http://127.0.0.1:5000/vote"
 
 #특정시간 vote 페이지 열기기
-def open_web():
-    driver = wb.Chrome()
-    driver.get(url)     
+# def open_web():
+#     driver = wb.Chrome()
+#     driver.get(url)     
 
-    time.sleep(3600)
-    driver.close()
-task_test = schedule.every().day.at("11:50").do(open_web)
+#     time.sleep(3600)
+#     driver.close()
+# task_test = schedule.every().day.at("11:50").do(open_web)
 
 #global votes = {}
 app = Flask(__name__)
